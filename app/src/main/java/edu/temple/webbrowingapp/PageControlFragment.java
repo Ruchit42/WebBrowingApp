@@ -20,6 +20,7 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class PageControlFragment extends Fragment {
+    //PageControlFragment pageControlFragment;
     ImageButton back;
     ImageButton forward;
     ImageButton search;
@@ -53,6 +54,14 @@ public class PageControlFragment extends Fragment {
             buttonClickInterface = (ButtonClickInterface)context;
         }else{
             throw new RuntimeException("You much impleament");
+        }
+    }
+    @Override
+    public void onActivityCreated(@NonNull Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
+        if(savedInstanceState != null){
+            buttonClickInterface = (MainActivity)getActivity();
         }
     }
     public static PageControlFragment newInstance(CharSequence url){
@@ -89,6 +98,7 @@ public class PageControlFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,7 +113,7 @@ public class PageControlFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CharSequence input = url.getText();
-                Toast.makeText(getActivity(),"You have clicked the search button  " + input,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(),"You have clicked the search button  " + input,Toast.LENGTH_LONG).show();
                 buttonClickInterface.OnInputurl(input);
 
             }
@@ -111,14 +121,14 @@ public class PageControlFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"You have clicked the back button  " ,Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(),"You have clicked the back button  " ,Toast.LENGTH_SHORT).show();
                 buttonClickInterface.backButton();
             }
         });
         forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"You have clicked the forward button  " ,Toast.LENGTH_LONG).show();
+               // Toast.makeText(getActivity(),"You have clicked the forward button  " ,Toast.LENGTH_LONG).show();
                 buttonClickInterface.forwardButton();
             }
         });

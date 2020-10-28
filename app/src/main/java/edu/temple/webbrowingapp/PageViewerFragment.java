@@ -2,6 +2,7 @@ package edu.temple.webbrowingapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -59,15 +60,23 @@ public class PageViewerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setRetainInstance(true);
+    }
+    @Override
+    public void onActivityCreated(@NonNull Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
+        if(savedInstanceState != null){
 
-        view =  inflater.inflate(R.layout.fragment_page_viewer, container, false);
-
+        }else {
+            view = inflater.inflate(R.layout.fragment_page_viewer, container, false);
+        }
 
         //myWebView.settings.javaScriptEnabled = true;
 

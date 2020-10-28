@@ -22,10 +22,21 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("BrowserActivity");
-        getSupportFragmentManager().beginTransaction().add(R.id.page_control,fragmentA)
-                .add(R.id.page_viewer,fragmentB).commit();
-
-
+        if(savedInstanceState ==null){
+            getSupportFragmentManager().beginTransaction().add(R.id.page_control,fragmentA,"TAG1")
+                    .add(R.id.page_viewer,fragmentB,"TAG2").commit();
+        }else {
+            fragmentA = (PageControlFragment)getSupportFragmentManager().findFragmentByTag("TAG1");
+            fragmentB = (PageViewerFragment)getSupportFragmentManager().findFragmentByTag("TAG2");
+            getSupportFragmentManager().beginTransaction().replace(R.id.page_control,fragmentA)
+                    .replace(R.id.page_viewer,fragmentB)
+                    .commit();
+        }
+//        @Override
+//        protected void onRestart() {
+//            super.onRestart();
+//
+//        }
     }
 
     @Override
