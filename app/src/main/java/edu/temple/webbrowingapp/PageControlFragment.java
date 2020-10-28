@@ -24,6 +24,7 @@ public class PageControlFragment extends Fragment {
     ImageButton forward;
     ImageButton search;
     EditText url;
+     View L;
     ButtonClickInterface buttonClickInterface;
     private static final String U_R_L = "Link";
     // TODO: Rename parameter arguments, choose names that match
@@ -92,7 +93,7 @@ public class PageControlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View L =  inflater.inflate(R.layout.fragment_page_control, container, false);
+         L =  inflater.inflate(R.layout.fragment_page_control, container, false);
         back = L.findViewById(R.id.back_btn);
         forward = L.findViewById(R.id.forward_btn);
         search = L.findViewById(R.id.search_btn);
@@ -110,7 +111,7 @@ public class PageControlFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"You have clicked the back button  " ,Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),"You have clicked the back button  " ,Toast.LENGTH_SHORT).show();
                 buttonClickInterface.backButton();
             }
         });
