@@ -39,7 +39,7 @@ public class PageControlFragment extends Fragment {
     public PageControlFragment() {
         // Required empty public constructor
     }
-    public interface ButtonClickInterface{
+    public interface ButtonClickInterface {
         void OnInputurl(CharSequence input);
         void backButton();
         void forwardButton();

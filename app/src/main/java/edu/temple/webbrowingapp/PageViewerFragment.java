@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.net.MalformedURLException;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PageViewerFragment#newInstance} factory method to
@@ -61,7 +63,7 @@ public class PageViewerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
 
         view =  inflater.inflate(R.layout.fragment_page_viewer, container, false);

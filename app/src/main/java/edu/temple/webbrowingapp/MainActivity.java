@@ -8,6 +8,7 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface {
@@ -33,14 +34,21 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.setWebViewClient(new WebViewClient(){
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(WebView view, String url)  {
                  super.shouldOverrideUrlLoading(view, url);
                  view.loadUrl(url);
                 // urls.add(input);
                  return true;
             }
+
+
         });
+
+        if(!input.toString().startsWith("https://")){
+            myWebView.loadUrl(("https://"+input.toString()));
+        }else{
         myWebView.loadUrl( input.toString());
+    }
     }
 
     @Override
