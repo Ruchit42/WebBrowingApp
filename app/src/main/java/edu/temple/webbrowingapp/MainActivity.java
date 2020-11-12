@@ -1,8 +1,12 @@
 package edu.temple.webbrowingapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -11,85 +15,98 @@ import android.widget.Toast;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface {
-    PageControlFragment fragmentA = new PageControlFragment();
-    PageViewerFragment fragmentB = new PageViewerFragment();
+public class MainActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface ,BrowserControlFragment.BrowserInterface, PageViewerFragment.browserInterface {
+    PageControlFragment pageControlFragment;
+    PageViewerFragment pageViewerFragment;
+    BrowserControlFragment browserControlFragment;
+    Page_Display page_display;
+    Page_List_Fragment page_list_fragment;
     public WebView myWebView;
-    public EditText editText;
+   FragmentManager fragmentManager;
+   Fragment temp;
     ArrayList<CharSequence> urls;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("BrowserActivity");
-        if(savedInstanceState ==null){
-            getSupportFragmentManager().beginTransaction().add(R.id.page_control,fragmentA,"TAG1")
-                    .add(R.id.page_viewer,fragmentB,"TAG2").commit();
-        }else {
-            fragmentA = (PageControlFragment)getSupportFragmentManager().findFragmentByTag("TAG1");
-            fragmentB = (PageViewerFragment)getSupportFragmentManager().findFragmentByTag("TAG2");
-            getSupportFragmentManager().beginTransaction().replace(R.id.page_control,fragmentA)
-                    .replace(R.id.page_viewer,fragmentB)
-                    .commit();
+
+        fragmentManager = getSupportFragmentManager();
+
+        if((temp = fragmentManager.findFragmentById(R.id.page_control)) instanceof PageControlFragment){
+    pageControlFragment = (PageControlFragment) temp;
+        }else{
+            pageControlFragment = new PageControlFragment();
+            fragmentManager.beginTransaction().add(R.id.page_control,pageControlFragment).commit();
         }
-//        @Override
-//        protected void onRestart() {
-//            super.onRestart();
-//
-//        }
+
+        if((temp = fragmentManager.findFragmentById(R.id.browser_control)) instanceof BrowserControlFragment  ){
+            browserControlFragment = (BrowserControlFragment) temp;
+        }else{
+            browserControlFragment = new BrowserControlFragment() ;
+            fragmentManager.beginTransaction().add(R.id.browser_control,browserControlFragment).commit();
+        }
+        if((temp = fragmentManager.findFragmentById(R.id.page_list)) instanceof Page_List_Fragment){
+            page_list_fragment =  (Page_List_Fragment) temp;
+        }else{
+            page_list_fragment = new Page_List_Fragment();
+            fragmentManager.beginTransaction().add(R.id.page_list,page_list_fragment).commit();
+
+        }
+        if((temp = fragmentManager.findFragmentById(R.id.pager)) instanceof  Page_Display){
+            page_display = (Page_Display) temp;
+        }else{
+            page_display = new Page_Display();
+            fragmentManager.beginTransaction().add(R.id.page_viewer,page_display).commit();
+        }
     }
 
     @Override
     public void OnInputurl(final CharSequence input) {
-        myWebView = fragmentB.view.findViewById(R.id.webview);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.setWebViewClient(new WebViewClient(){
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url)  {
-                 super.shouldOverrideUrlLoading(view, url);
-                 view.loadUrl(url);
-                // urls.add(input);
-                 return true;
-            }
+        int i = page_display.myPager.getCurrentItem();
+        if (page_display.viewerFragments.size() == 0) {
+            page_display.viewerFragments.add(new PageViewerFragment());
+            page_display.myPager.getAdapter().notifyDataSetChanged();
+        }
+        page_display.viewerFragments.get(i).searchButt(input.toString());
 
-
-        });
-
-        if(!input.toString().startsWith("https://")){
-            myWebView.loadUrl(("https://"+input.toString()));
-        }else{
-        myWebView.loadUrl( input.toString());
     }
-    }
+
 
     @Override
     public void backButton() {
-        myWebView = fragmentB.view.findViewById(R.id.webview);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        editText = fragmentA.L.findViewById(R.id.url_txt);
-
-
-        if(myWebView.canGoBack()){
-
-            myWebView.goBack();
-            editText.setText(myWebView.getOriginalUrl());
-           // editText.getText();
-            Toast.makeText(fragmentB.getContext(),myWebView.getUrl() ,Toast.LENGTH_LONG).show();
+        int i = page_display.myPager.getCurrentItem();
+        page_display.viewerFragments.get(i).goBack();
+           // editText.setText(myWebView.getOriginalUrl());
 
 
 
         }
 
-    }
+
 
     @Override
     public void forwardButton() {
-        myWebView = fragmentB.view.findViewById(R.id.webview);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        editText = fragmentA.L.findViewById(R.id.url_txt);
-        if(myWebView.canGoForward()){
-            myWebView.goForward();
-            editText.setText((myWebView.getOriginalUrl()));
-        }
+        int i = page_display.myPager.getCurrentItem();
+        page_display.viewerFragments.get(i).goForward();
+    }
+
+    @Override
+    public void addButton() {
+        findViewById(R.id.addPage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                page_display.viewerFragments.add(new PageViewerFragment());
+                page_display.myPager.getAdapter().notifyDataSetChanged();
+                Log.e("tagw","opennewPage");
+            }
+        });
+    }
+
+
+    @Override
+    public void updateURL(String url) {
+
     }
 }

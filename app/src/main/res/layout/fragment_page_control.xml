@@ -18,6 +18,8 @@
         android:paddingVertical="8dp"
 
         />
+
+
     <ImageButton
         android:id="@+id/back_btn"
         android:layout_width="20dp"
@@ -25,7 +27,6 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_baseline_arrow_back_24" />
-
 
     <ImageButton
         android:id="@+id/search_btn"
@@ -40,8 +41,6 @@
         android:layout_height="100dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_baseline_arrow_forward_24" />
-
-
 
 
 </LinearLayout>

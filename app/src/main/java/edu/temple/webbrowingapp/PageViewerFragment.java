@@ -1,8 +1,11 @@
 package edu.temple.webbrowingapp;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,53 +16,23 @@ import android.webkit.WebViewClient;
 
 import java.net.MalformedURLException;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PageViewerFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PageViewerFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
      public WebView myWebView;
      View view;
+     browserInterface browserInterface;
 
     public PageViewerFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PageViewerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PageViewerFragment newInstance(String param1, String param2) {
-        PageViewerFragment fragment = new PageViewerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
         setRetainInstance(true);
     }
     @Override
@@ -67,19 +40,65 @@ public class PageViewerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
     }
+    public interface browserInterface{
+        void updateURL(String url);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context){
+        super.onAttach(context);
+        if(context instanceof  browserInterface){
+            browserInterface = (browserInterface)context;
+        }else{
+            throw new RuntimeException("Implement your interface");
+        }
+    }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        myWebView.saveState(outState);
+    }
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
-        if(savedInstanceState != null){
+        View l = inflater.inflate(R.layout.fragment_page_viewer,container,false);
+        myWebView = l.findViewById(R.id.webview);
+        myWebView.getSettings().setJavaScriptEnabled(true);
+        myWebView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageStarted (WebView view, String url, Bitmap favicon){
+                super.onPageStarted(view, url, favicon);
+                browserInterface.updateURL(url);
+            }
+        });
 
-        }else {
-            view = inflater.inflate(R.layout.fragment_page_viewer, container, false);
+        if(savedInstanceState != null){
+            myWebView.restoreState(savedInstanceState);
         }
 
-        //myWebView.settings.javaScriptEnabled = true;
+
 
         return view;
+    }
+    public void goForward(){
+        myWebView.goForward();
+    }
+
+    public void goBack(){
+        myWebView.goBack();
+    }
+
+    public void searchButt(String url){
+        if(!url.startsWith("https://")){
+            url = "https://" + url;
+            myWebView.loadUrl(url);
+        }else {
+            myWebView.loadUrl(url);
+        }
     }
 }
