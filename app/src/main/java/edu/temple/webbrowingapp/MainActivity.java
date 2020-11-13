@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     BrowserControlFragment browserControlFragment;
     Page_List_Fragment pageListFragment;
     public ArrayList<PageViewerFragment> viewerArray;
-    private static final String LIST_KEY = "fragments";
+    private static final String KEY = "fragments";
 
 
     @Override
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState != null) {
-            viewerArray = (ArrayList<PageViewerFragment>) savedInstanceState.getSerializable(LIST_KEY);
+            viewerArray = (ArrayList<PageViewerFragment>) savedInstanceState.getSerializable(KEY);
         } else {
             viewerArray = new ArrayList<>();
         }
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     @Override
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(LIST_KEY, viewerArray);
+        outState.putSerializable(KEY, viewerArray);
     }
 
     @Override
