@@ -18,30 +18,28 @@ import java.util.ArrayList;
 
 public class Page_List_Fragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    PageListInterface pageListInterface;
-    View l;
-    ArrayList<PageViewerFragment> viewerList;
-    PageViewerFragmentAdaptor new_adaptor;
-    ViewPager viewPager;
+    View v;
+    PageListInterface pageListListener;
+    ArrayList<PageViewerFragment> viewersList;
     ListView listView;
+    ViewPager viewPager;
+    PageViewerFragmentAdaptor adapter;
 
     public Page_List_Fragment() {
         // Required empty public constructor
     }
 
-    interface PageListInterface {
+    interface PageListInterface{
         ArrayList<PageViewerFragment> getArray();
-
         ViewPager getViewPager();
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof PageListInterface) {
-            pageListInterface = (PageListInterface) context;
-        } else {
+        if(context instanceof PageListInterface){
+            pageListListener = (PageListInterface) context;
+        }else{
             throw new RuntimeException("Please implement PageListInterface");
         }
     }
@@ -56,25 +54,26 @@ public class Page_List_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        l = inflater.inflate(R.layout.fragment_page__list_, container, false);
-        listView = l.findViewById(R.id.webSite_List);
-        viewerList = pageListInterface.getArray();
-        viewPager = pageListInterface.getViewPager();
-        new_adaptor = new PageViewerFragmentAdaptor(getActivity(), viewerList, viewPager);
-        listView.setAdapter(new_adaptor);
+        v =  inflater.inflate(R.layout.fragment_page__list_, container, false);
+        listView = v.findViewById(R.id.webSite_List);
+        viewersList = pageListListener.getArray();
+        viewPager = pageListListener.getViewPager();
+        adapter = new PageViewerFragmentAdaptor(getActivity(), viewersList, viewPager);
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                viewPager.setCurrentItem(position);
+            public void onItemClick(AdapterView<?> adapterView, View view, int posotion, long l) {
+                viewPager.setCurrentItem(posotion);
             }
         });
 
-        return l;
+        return v;
     }
 
+    @Override
     public void onDetach() {
         super.onDetach();
-        pageListInterface = null;
+        pageListListener = null;
 
     }
 }

@@ -17,14 +17,26 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 public class Page_Display extends Fragment {
-ViewPager myPager;
-PagerDisplayInterface pagerDisplayInterface;
+    View v;
+    ViewPager myViewPager;
+    PagerFragmentInterface pagerFragmentListener;
     ArrayList<PageViewerFragment> viewerFragmentsArray;
-    View viewGroup;
 
-ArrayList<PageViewerFragment> viewerFragments;
     public Page_Display() {
         // Required empty public constructor
+    }
+    interface PagerFragmentInterface{
+        ArrayList<PageViewerFragment> getPageViewerList();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if(context instanceof PagerFragmentInterface){
+            pagerFragmentListener = (PagerFragmentInterface) context;
+        }else {
+            throw new RuntimeException("Please implement PagerFragmentInterface");
+        }
     }
 
     @Override
@@ -33,31 +45,16 @@ ArrayList<PageViewerFragment> viewerFragments;
 
     }
 
-    interface PagerDisplayInterface{
-        ArrayList<PageViewerFragment> getPageViewerList();
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if(context instanceof PagerDisplayInterface){
-            pagerDisplayInterface = (PagerDisplayInterface) context;
-        }else {
-            throw new RuntimeException("Please implement Interface");
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_page__display,container,false);
-        myPager = viewGroup.findViewById(R.id.viewPager);
-        viewerFragmentsArray = pagerDisplayInterface.getPageViewerList();
-
-
-
-        myPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+        v = inflater.inflate(R.layout.fragment_page__display, container, false);
+        myViewPager = v.findViewById(R.id.viewPager);
+        //get array list from activity
+        viewerFragmentsArray = pagerFragmentListener.getPageViewerList();
+        //communicate with activity
+        myViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -69,6 +66,8 @@ ArrayList<PageViewerFragment> viewerFragments;
                 return viewerFragmentsArray.size();
             }
         });
-        return viewGroup;
+
+
+        return v;
     }
 }

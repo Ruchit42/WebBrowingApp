@@ -54,14 +54,6 @@ public class PageControlFragment extends Fragment {
         super.onDetach();
         buttonClickInterface = null;
     }
-//    @Override
-//    public void onActivityCreated(@NonNull Bundle savedInstanceState){
-//        super.onActivityCreated(savedInstanceState);
-//        setRetainInstance(true);
-//        if(savedInstanceState != null){
-//            buttonClickInterface = (MainActivity)getActivity();
-//        }
-//    }
 
 
 

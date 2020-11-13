@@ -15,9 +15,10 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 
-public class PageViewerFragment extends Fragment {
+public class PageViewerFragment extends Fragment implements Serializable {
 
 
      public WebView myWebView;
@@ -68,8 +69,8 @@ public class PageViewerFragment extends Fragment {
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
         if(savedInstanceState == null) {
-            View l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
-            myWebView = l.findViewById(R.id.webview);
+            view = inflater.inflate(R.layout.fragment_page_viewer, container, false);
+            myWebView = view.findViewById(R.id.webview);
             myWebView.getSettings().setJavaScriptEnabled(true);
             myWebView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -77,6 +78,8 @@ public class PageViewerFragment extends Fragment {
                     super.onPageStarted(view, url, favicon);
                     pageViewerInterface.updateURL(url);
                 }
+
+
             });
             if (savedInstanceState != null) {
                 myWebView.restoreState(savedInstanceState);
@@ -97,6 +100,7 @@ public class PageViewerFragment extends Fragment {
 
     public void searchButt(String url){
         Log.e("Check", url);
+
         myWebView.loadUrl(url);
     }
     public String getLink(){
