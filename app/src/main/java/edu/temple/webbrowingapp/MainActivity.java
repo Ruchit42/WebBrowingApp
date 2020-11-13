@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
         }
         viewerArray.add(new PageViewerFragment());
         pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
+        pagerFragment.myViewPager.setCurrentItem(viewerArray.size()-1);
 
 
 
