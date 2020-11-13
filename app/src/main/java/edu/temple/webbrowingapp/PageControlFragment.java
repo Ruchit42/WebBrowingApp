@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,16 @@ public class PageControlFragment extends Fragment {
     ImageButton back;
     ImageButton forward;
     ImageButton search;
-    EditText url;
+
      View L;
+    EditText editText;
     ButtonClickInterface buttonClickInterface;
 
     public PageControlFragment() {
         // Required empty public constructor
     }
     public interface ButtonClickInterface {
-        void OnInputurl(CharSequence input);
+        void OnInputurl(String input);
         void backButton();
         void forwardButton();
     }
@@ -42,6 +44,16 @@ public class PageControlFragment extends Fragment {
             throw new RuntimeException("You must impleament");
         }
     }
+
+    public void refreshURL (String url) {
+        editText.setText(url);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        buttonClickInterface = null;
+    }
 //    @Override
 //    public void onActivityCreated(@NonNull Bundle savedInstanceState){
 //        super.onActivityCreated(savedInstanceState);
@@ -53,11 +65,11 @@ public class PageControlFragment extends Fragment {
 
 
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
 
     @Override
@@ -68,13 +80,14 @@ public class PageControlFragment extends Fragment {
         back = L.findViewById(R.id.back_btn);
         forward = L.findViewById(R.id.forward_btn);
         search = L.findViewById(R.id.search_btn);
-        url = L.findViewById(R.id.url_txt);
+        editText = L.findViewById(R.id.url_txt);
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence input = url.getText();
+                String input = editText.getText().toString();
                 Toast.makeText(getActivity(),"You have clicked the search button  " + input,Toast.LENGTH_LONG).show();
+                Log.e("check input", input);
                 buttonClickInterface.OnInputurl(input);
 
             }

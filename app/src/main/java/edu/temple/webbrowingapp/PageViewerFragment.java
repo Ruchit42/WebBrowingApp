@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class PageViewerFragment extends Fragment {
 
      public WebView myWebView;
      View view;
-     browserInterface browserInterface;
+    PageViewerInterface pageViewerInterface;
 
     public PageViewerFragment() {
         // Required empty public constructor
@@ -40,15 +41,15 @@ public class PageViewerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
     }
-    public interface browserInterface{
+    public interface PageViewerInterface{
         void updateURL(String url);
     }
 
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
-        if(context instanceof  browserInterface){
-            browserInterface = (browserInterface)context;
+        if(context instanceof  PageViewerInterface){
+            pageViewerInterface = (PageViewerInterface)context;
         }else{
             throw new RuntimeException("Implement your interface");
         }
@@ -66,19 +67,20 @@ public class PageViewerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)  {
         // Inflate the layout for this fragment
-        View l = inflater.inflate(R.layout.fragment_page_viewer,container,false);
-        myWebView = l.findViewById(R.id.webview);
-        myWebView.getSettings().setJavaScriptEnabled(true);
-        myWebView.setWebViewClient(new WebViewClient(){
-            @Override
-            public void onPageStarted (WebView view, String url, Bitmap favicon){
-                super.onPageStarted(view, url, favicon);
-                browserInterface.updateURL(url);
+        if(savedInstanceState == null) {
+            View l = inflater.inflate(R.layout.fragment_page_viewer, container, false);
+            myWebView = l.findViewById(R.id.webview);
+            myWebView.getSettings().setJavaScriptEnabled(true);
+            myWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                    super.onPageStarted(view, url, favicon);
+                    pageViewerInterface.updateURL(url);
+                }
+            });
+            if (savedInstanceState != null) {
+                myWebView.restoreState(savedInstanceState);
             }
-        });
-
-        if(savedInstanceState != null){
-            myWebView.restoreState(savedInstanceState);
         }
 
 
@@ -94,11 +96,10 @@ public class PageViewerFragment extends Fragment {
     }
 
     public void searchButt(String url){
-        if(!url.startsWith("https://")){
-            url = "https://" + url;
-            myWebView.loadUrl(url);
-        }else {
-            myWebView.loadUrl(url);
-        }
+        Log.e("Check", url);
+        myWebView.loadUrl(url);
+    }
+    public String getLink(){
+        return myWebView.getTitle();
     }
 }

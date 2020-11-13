@@ -26,6 +26,11 @@ public class BrowserControlFragment extends Fragment {
         void addButton();
     }
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof BrowserInterface){
