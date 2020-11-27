@@ -15,5 +15,22 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_baseline_add_circle_24" />
+    <ImageButton
+        android:id="@+id/addBookMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_weight="1"
+        android:src="@drawable/ic_baseline_bookmark_border_24"/>
+
+    <ImageButton
+        android:id="@+id/ViewBookMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_weight="1"
+        android:src="@drawable/ic_baseline_bookmarks_24"
+        />
+
 
 </LinearLayout>

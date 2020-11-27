@@ -5,15 +5,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
-import android.view.View;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import java.net.MalformedURLException;
+
+
+import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements PageControlFragment.ButtonClickInterface ,
@@ -27,16 +30,25 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     Page_List_Fragment pageListFragment;
     public ArrayList<PageViewerFragment> viewerArray;
     private static final String KEY = "fragments";
+    private static final String BookMarkKey = "bookmarks";
+    public ArrayList<BookMark> bookmarks;
+    public static MainActivity instance;
+    //First array list of bookmarks , second get URL and tile of the current page , start inside the bookmark object
+    //transfer bookmarks from main activity to bookmark activity
+    //
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        instance = this;
         if (savedInstanceState != null) {
             viewerArray = (ArrayList<PageViewerFragment>) savedInstanceState.getSerializable(KEY);
+            bookmarks = (ArrayList<BookMark>) savedInstanceState.getSerializable(BookMarkKey);
         } else {
             viewerArray = new ArrayList<>();
+            bookmarks = new ArrayList<>();
         }
 
         addFragments();
@@ -111,15 +123,21 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     public void OnInputurl(String urlInput) {
         if(viewerArray.size() == 0){
             addButton();
+            pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
         }
 
 
         if(!urlInput.startsWith("https://")){
 
             viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).searchButt("https://" + urlInput);
+            String input = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
+            pagerFragment.myViewPager.getAdapter();
+            pageControlFragment.editText.setText(input);
         }else {
 
             viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).searchButt(urlInput);
+            String input = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
+            pageControlFragment.editText.setText(input);
         }
 
 
@@ -137,6 +155,27 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
 
 
     }
+    @Override
+    public void viewBookmark(){
+        Intent bookmark_ = new Intent(getApplicationContext(),BookmarkActivity.class);
+       bookmark_.putParcelableArrayListExtra("BookMarkArrayList",  bookmarks);
+        startActivity(bookmark_);
+
+    }
+
+
+    @Override
+    public void addBookmark(){
+        String Title = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getTitle();
+        String URL = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
+        BookMark addbookmark = new BookMark(URL,Title);
+        bookmarks.add(addbookmark);
+
+    }
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
 
     @Override
     public ArrayList<PageViewerFragment> getPageViewerList() {
@@ -147,6 +186,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     protected void onSaveInstanceState (Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(KEY, viewerArray);
+        outState.putSerializable(BookMarkKey,bookmarks);
     }
 
     @Override

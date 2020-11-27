@@ -16,6 +16,8 @@ import android.widget.Toast;
 public class BrowserControlFragment extends Fragment {
 
     ImageButton newPage;
+    ImageButton addBookMark;
+    ImageButton viewBookMark;
     View L;
     BrowserInterface browserInterface;
 
@@ -24,6 +26,8 @@ public class BrowserControlFragment extends Fragment {
     }
     public interface BrowserInterface{
         void addButton();
+        void addBookmark();
+        void viewBookmark();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class BrowserControlFragment extends Fragment {
         // Inflate the layout for this fragment
         L =  inflater.inflate(R.layout.fragment_browser_control, container, false);
         newPage = L.findViewById(R.id.addPage);
+        addBookMark = L.findViewById(R.id.addBookMark);
+        viewBookMark = L.findViewById(R.id.ViewBookMark);
         newPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +60,24 @@ public class BrowserControlFragment extends Fragment {
                 browserInterface.addButton();
             }
         });
+
+        addBookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"You have clicked the add bookmark button  " ,Toast.LENGTH_LONG).show();
+                browserInterface.addBookmark();
+            }
+        });
+
+        viewBookMark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(),"You have clicked the view bookmark button  " ,Toast.LENGTH_LONG).show();
+                browserInterface.viewBookmark();
+            }
+        });
+
+
         return L ;
     }
 }
