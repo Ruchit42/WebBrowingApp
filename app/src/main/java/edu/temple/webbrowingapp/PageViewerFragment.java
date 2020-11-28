@@ -101,6 +101,11 @@ public class PageViewerFragment extends Fragment implements Parcelable {
                     super.onPageStarted(view, url, favicon);
                     pageViewerInterface.updateURL(url);
                 }
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    pageViewerInterface.updateURL(url);
+                }
 
 
             });
