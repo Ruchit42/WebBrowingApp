@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     private static final String BookMarkKey = "bookmarks";
     public ArrayList<BookMark> bookmarks;
     public static MainActivity instance;
+    private static final String SHARED_PREFS= "MY_SHARED_PREF";
+    private static final String SAVE_KEY= "TASK_LIST";
     //First array list of bookmarks , second get URL and tile of the current page , start inside the bookmark object
     //transfer bookmarks from main activity to bookmark activity
     //
@@ -104,7 +106,8 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
 
     @Override
     public void updateURL(String url) {
-        pageControlFragment.refreshURL(url);
+        pageControlFragment.editText.setText(viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl());
+        pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -147,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     public void addButton() {
         if(viewerArray == null){
             viewerArray.add( new PageViewerFragment());
+            pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
         }
         viewerArray.add(new PageViewerFragment());
         pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
@@ -157,19 +161,21 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     }
     @Override
     public void viewBookmark(){
-        Intent bookmark_ = new Intent(getApplicationContext(),BookmarkActivity.class);
-       bookmark_.putParcelableArrayListExtra("BookMarkArrayList",  bookmarks);
-        startActivity(bookmark_);
+        Intent goToBookMarkActivity = new Intent(getApplicationContext(), BookmarkActivity.class);
+        /*Put parcelable array list here*/
+        goToBookMarkActivity.putParcelableArrayListExtra("BOOKMARKS_ARRAYLIST", bookmarks);
+        startActivity(goToBookMarkActivity);
 
     }
 
 
     @Override
     public void addBookmark(){
-        String Title = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getTitle();
         String URL = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
-        BookMark addbookmark = new BookMark(URL,Title);
-        bookmarks.add(addbookmark);
+        String siteTitle = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getTitle() ;
+        BookMark toAdd = new BookMark(URL, siteTitle);
+        bookmarks.add(toAdd);
+
 
     }
     public static MainActivity getInstance() {

@@ -8,17 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.io.Serializable;
-import java.net.MalformedURLException;
-
-public class PageViewerFragment extends Fragment implements Serializable {
+public class PageViewerFragment extends Fragment implements Parcelable {
 
 
      public WebView myWebView;
@@ -29,6 +29,9 @@ public class PageViewerFragment extends Fragment implements Serializable {
         // Required empty public constructor
     }
 
+    protected PageViewerFragment(Parcel in) {
+    }
+
 
 
     @Override
@@ -36,6 +39,26 @@ public class PageViewerFragment extends Fragment implements Serializable {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+    }
+
+    public static final Parcelable.Creator<PageViewerFragment> CREATOR = new Parcelable.Creator<PageViewerFragment>() {
+        @Override
+        public PageViewerFragment createFromParcel(Parcel in) {
+            return new PageViewerFragment(in);
+        }
+
+        @Override
+        public PageViewerFragment[] newArray(int size) {
+            return new PageViewerFragment[size];
+        }
+    };
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
     }
     @Override
     public void onActivityCreated(@NonNull Bundle savedInstanceState){

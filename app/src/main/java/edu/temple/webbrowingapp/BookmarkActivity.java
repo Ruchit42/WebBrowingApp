@@ -12,40 +12,54 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 public class BookmarkActivity extends AppCompatActivity {
-    ArrayList<BookMark> bookMarkArrayList;
-    ListView listView;
+    ListView bookMarkListView;
+    ArrayList<BookMark> bookMarksList;
+
+    private static final String SHARED_PREFS= "MY_SHARED_PREF";
+    private static final String SAVE_KEY= "TASK_LIST";
     SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
-        listView = findViewById(R.id.bookList);
-        setTitle("Book Marks ");
-//
-        Intent getbookmarks = new Intent();
-        bookMarkArrayList = getbookmarks.getParcelableArrayListExtra("BOOKMARKS_ARRAYLIST");
+        setTitle("Book Marks");
 
-        Log.e("CODE",bookMarkArrayList.get(0).getTitle());
 
-        BookMarkAdapter adapter = new BookMarkAdapter(this,bookMarkArrayList);
 
-        listView.setAdapter(adapter);
+        Intent toget = getIntent();
+        bookMarksList = toget.getParcelableArrayListExtra("BOOKMARKS_ARRAYLIST");
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+        Log.e("CODE", bookMarksList.get(0).get_web_Title());
+
+        bookMarkListView = (ListView) findViewById(R.id.bookList);
+
+
+
+
+
+        BookMarkAdapter adapter = new BookMarkAdapter(this, bookMarksList);
+        bookMarkListView.setAdapter(adapter);
+        bookMarkListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String loadURL = bookMarkArrayList.get(position).getURL();
-                MainActivity mainActivity = MainActivity.getInstance();
-                mainActivity.addButton();
-                mainActivity.OnInputurl(loadURL);
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplication(), bookMarksList.get(i).getURL(), Toast.LENGTH_SHORT).show();
+                String loadUrl = bookMarksList.get(i).getURL();
+                MainActivity bi = MainActivity.getInstance();
+                bi.addButton();
+                bi.OnInputurl(loadUrl);
                 finish();
             }
+
         });
 
-
     }
+
 
 
 }
