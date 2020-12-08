@@ -73,7 +73,10 @@ public class Page_Display extends Fragment {
             public void finishUpdate(@NonNull ViewGroup container) {
                 super.finishUpdate(container);
                 String getbackURL = pagerFragmentListener.getbackURL();
-                viewerFragmentsArray.get(myViewPager.getCurrentItem()).myWebView.loadUrl(getbackURL);
+
+                if (getbackURL != null && viewerFragmentsArray.size() == 1 && !getbackURL.equals("https://Enter a url")) {
+                    viewerFragmentsArray.get(myViewPager.getCurrentItem()).myWebView.loadUrl(getbackURL);
+                }
             }
 
         });
