@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
@@ -58,6 +60,32 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
 
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sharemenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_share:
+
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String getUrl = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
+                if(getUrl == null){
+                    getUrl = "Web site link broken!";
+                }
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getUrl);
+                startActivity(Intent.createChooser(sharingIntent, "Sharing Option:"));
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     public void addFragments(){
         fragmentManager = getSupportFragmentManager();
         Fragment temp;
