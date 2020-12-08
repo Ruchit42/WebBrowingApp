@@ -27,6 +27,7 @@ public class Page_Display extends Fragment {
     }
     interface PagerFragmentInterface{
         ArrayList<PageViewerFragment> getPageViewerList();
+        String getbackURL();
     }
 
     @Override
@@ -55,6 +56,8 @@ public class Page_Display extends Fragment {
         viewerFragmentsArray = pagerFragmentListener.getPageViewerList();
         //communicate with activity
         myViewPager.setAdapter(new FragmentStatePagerAdapter(getChildFragmentManager()) {
+
+
             @NonNull
             @Override
             public Fragment getItem(int position) {
@@ -65,7 +68,17 @@ public class Page_Display extends Fragment {
             public int getCount() {
                 return viewerFragmentsArray.size();
             }
+
+            @Override
+            public void finishUpdate(@NonNull ViewGroup container) {
+                super.finishUpdate(container);
+                String getbackURL = pagerFragmentListener.getbackURL();
+                viewerFragmentsArray.get(myViewPager.getCurrentItem()).myWebView.loadUrl(getbackURL);
+            }
+
         });
+
+
 
 
         return v;

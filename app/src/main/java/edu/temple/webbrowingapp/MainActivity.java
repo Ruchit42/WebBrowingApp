@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -105,6 +106,16 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if(viewerArray.size() == 0) {
+            viewerArray.add(new PageViewerFragment());
+            pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
+        }
+
+    }
+
+    @Override
     public void updateURL(String url) {
         pageControlFragment.editText.setText(viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl());
         pagerFragment.myViewPager.getAdapter().notifyDataSetChanged();
@@ -186,6 +197,17 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
     @Override
     public ArrayList<PageViewerFragment> getPageViewerList() {
         return viewerArray;
+    }
+
+    @Override
+    public String getbackURL() {
+        Intent intent = getIntent();
+        String receivedAction = intent.getAction();
+        Uri data = intent.getData();
+        if(data == null){
+            return "https//google.com";
+        }
+        return data.toString();
     }
 
     @Override
