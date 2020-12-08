@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements PageControlFragme
                 sharingIntent.setType("text/plain");
                 String getUrl = viewerArray.get(pagerFragment.myViewPager.getCurrentItem()).myWebView.getUrl();
                 if(getUrl == null){
-                    getUrl = "Web site link broken!";
+                    getUrl = "Try again, Error";
                 }
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getUrl);
-                startActivity(Intent.createChooser(sharingIntent, "Sharing Option:"));
+                startActivity(Intent.createChooser(sharingIntent, "Share"));
                 return true;
 
             default:
